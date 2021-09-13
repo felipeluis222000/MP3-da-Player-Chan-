@@ -77,8 +77,8 @@ def Main(tela, clock, fonte):
             cor_pass = (255, 255, 255)
 
         if not pause:
-            tempo_atual = round((pygame.mixer.music.get_pos())/60000,2)
-            porcentagem = round((tempo_atual+POS)*100/tempo_musica,2)
+            tempo_atual = (pygame.mixer.music.get_pos())/60000
+            porcentagem = (tempo_atual+POS)*100/tempo_musica
             tocando = fonte.render(nome_musica.strip(".mp3"),True,BRANCO)
             tecla = pygame.key.get_pressed()
 
@@ -116,7 +116,6 @@ def Main(tela, clock, fonte):
                             if index >= 0:
                                 index -= 1
                                 nome_musica,tempo_musica = TocarMusica(index)
-
 
                             else:
                                 index = (len(MUSICAS_TOCAR)-1)
@@ -192,8 +191,8 @@ def Main(tela, clock, fonte):
                                 dancarino.danca_final += 8
 
                         elif mouse_bar:
-                            pos = round((mouse[0]-50)*100/200,2)
-                            pos = round((tempo_musica*pos/100)*60,2)
+                            pos = ((mouse[0]-50)*100/200)
+                            pos = (tempo_musica*pos/100)*60
                             TocarMusica(index,pos=pos)
 
                 elif evento.type == 900:
@@ -237,7 +236,7 @@ def Main(tela, clock, fonte):
                 tela.blit(tocando,(X,0))
 
             pygame.draw.line(tela,(255,255,255),(50,280),(250,280))
-            pygame.draw.line(tela, (0, 0, 255), (50, 280), (50+(200*porcentagem/100), 280))
+            pygame.draw.line(tela,(0,0,255),(50,280),(50+(200*porcentagem/100),280))
             pygame.draw.circle(tela,(255,255,255),(50+(200*porcentagem/100),280),3,0)
             pygame.draw.polygon(tela,cor_return,((130,220),(130,240),(130-(300**(1/2)),230)),0)
             pygame.draw.polygon(tela,cor_return,((120,222),(120,238),(120-(300**(1/2)),230)),0)
@@ -290,10 +289,10 @@ def TocarMusica(index,pos=None):
     pygame.mixer.music.play()
     if pos:
         POS = pos/60
-        pygame.mixer.music.rewind()
-        pygame.mixer.music.set_pos(pos)
+        pygame.mixer.music.set_pos(pos+pos*0.085)
 
-    return MUSICAS_TOCAR[index], round(musica.get_length()/60,2)
+
+    return MUSICAS_TOCAR[index], musica.get_length()/60
 
 def OrdemMusicas(caminho):
     for diretorio, subpasta, arquivo in os.walk(caminho):
