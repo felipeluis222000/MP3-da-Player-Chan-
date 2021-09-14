@@ -324,6 +324,7 @@ def Main(tela, clock, fonte):
             pygame.display.flip()
 
         if pause:
+            tocando = fonte.render("Pause",True,PRETO)
             clock.tick(60)
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
@@ -357,7 +358,7 @@ def Main(tela, clock, fonte):
             pygame.draw.rect(tela,(79,79,79),(10,40,10,150),0)
             pygame.draw.rect(tela,(79,79,79),(280,40,10,150),0)
             pygame.draw.rect(tela,(34,139,34),(45,350,210,35),0)
-            tela.blit(tocando,(X,355))
+            tela.blit(tocando,((300/2)-(tocando.get_width()/2),355))
             pygame.draw.rect(tela,(54,54,54),(0,350,45,50),0)
             pygame.draw.rect(tela,(54,54,54),(255,350,45,50),0)
             pygame.draw.rect(tela,(54,54,54),(45,385,210,15),0)
@@ -371,6 +372,7 @@ def Main(tela, clock, fonte):
             pygame.draw.line(tela,(255,255,255),(125-(300**(1/2)),330.5),(130,330.5))
             pygame.draw.line(tela,(255,255,255),(175+(300**(1/2)),330.5),(170,330.5))
             pygame.draw.polygon(tela,cor_pause,((142,320),(142,340),(142+(300**(1/2)),330)),0)
+            pygame.draw.line(tela,(255,255,255),(137+(300**(1/2)),330),(142,330))
             for i in range(5):
                 pygame.draw.circle(tela,cor_circulos[i],(225+(15*i),200),5)
                 pygame.draw.circle(tela,cor_circulos[i+5],(225+(15*i),215),5)
