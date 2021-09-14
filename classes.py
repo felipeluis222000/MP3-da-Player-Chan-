@@ -2,8 +2,8 @@ import pygame
 import random
 import os
 
-spritesheet = pygame.image.load("dancarino/dança.png")
-class Dancarino(pygame.sprite.Sprite):
+spritesheet = pygame.image.load("Player_Chan/dança.png")
+class Player_Chan(pygame.sprite.Sprite):
     def __init__(self,estilo_musica):
         super().__init__()
         self.contador = 0
