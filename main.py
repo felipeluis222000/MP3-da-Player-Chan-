@@ -9,7 +9,8 @@ BRANCO = (255,255,255)
 PRETO = (0,0,0)
 VOLUME = 0.2
 POS = 0
-CAMINHO = "musicas"
+MUSICAS_TOCAR = []
+
 
 
 def Main(tela, clock, fonte, fonte2):
@@ -201,7 +202,7 @@ def Main(tela, clock, fonte, fonte2):
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
                     rodando = False
-                    exit()
+
 
                 elif evento.type == pygame.KEYDOWN:
                     if evento.key == pygame.K_RIGHT:
@@ -394,7 +395,7 @@ def Main(tela, clock, fonte, fonte2):
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
                     rodando = False
-                    exit()
+
 
                 elif evento.type == pygame.KEYDOWN:
 
@@ -469,19 +470,146 @@ def TocarMusica(index,pos=None):
 
     return tocar[2],tocar[1],musica.get_length()/60
 
-def OrdemMusicas(caminho):
+def OrdemMusicas(tela,clock,fonte,fonte2,estilo_musica):
+    global MUSICAS_TOCAR
+    caminho = "musicas"
     musicas_tocar = []
     musicas = []
     rodando = True
+    if estilo_musica != "pause":
+        caminho += f"\\{estilo_musica}"
+
     for diretorio, subpasta, arquivo in os.walk(caminho,topdown=False):
         for nomes in arquivo:
             musicas.append(os.path.join(diretorio,nomes))
+
     while rodando:
         musica = random.choice(musicas)
         musicas_tocar.append(musica)
         musicas.remove(musica)
         if not musicas:
-            return musicas_tocar
+            rodando = False
+            MUSICAS_TOCAR = musicas_tocar
+            Main(tela,clock,fonte,fonte2)
+
+def TelaEscolherEstilos(tela,clock,fonte,fonte2):
+    rodando = True
+    index = 0
+    falas_player_chan = ["Vai ser uma loucura! 0__0","Vamos dar uma animada :)","Hoje estou meio devagar ~_~",
+                         "VAMOS FAZER BARULO! \'0\'","eheheh, assim eh o amor! S2","Hora de ficar pra baixo ;-;"]
+    falas_player_chan_cor = [(255,255,255) for _ in range(6)]
+    fonte_player_chan = pygame.font.Font("fontes/Musicals.ttf",12)
+    todas = fonte.render("todas",True,(255,255,255))
+    animadas = fonte.render("animadas",True,(255,255,255))
+    lentas = fonte.render("lentas",True,(255,255,255))
+    rock = fonte.render("rock",True,(255,255,255))
+    romanticas = fonte.render("romanticas",True,(255,255,255))
+    tristes = fonte.render("tristes",True,(255,255,255))
+    estilos = [todas,animadas,lentas,rock,romanticas,tristes]
+    estilo = ["pause","animadas","lentas","rock","romanticas","tristes"]
+    baloes = [[pygame.image.load("Player_Chan/balão todas.png"),(140,65)],
+              [pygame.image.load("Player_Chan/balão animado.png"),(140,70)],
+              [pygame.image.load("Player_Chan/balão lento.png"),(95,65)],
+              [pygame.image.load("Player_Chan/balão rock.png"),(125,50)],
+              [pygame.image.load("Player_Chan/balão romantico.png"),(135,70)],
+              [pygame.image.load("Player_Chan/balão triste.png"),(135,80)]]
+    player_chan = Player_Chan("pause")
+    evento_mouse = False
+
+    while rodando:
+        clock.tick(60)
+        player_chan.estilo_musica = estilo[index]
+        falas = falas_player_chan[index].split()
+        if index == 3:
+            fala1 = " ".join(falas[:2])
+            fala2 = " ".join(falas[2:])
+        else:
+            fala1 = " ".join(falas[:3])
+            fala2 = " ".join(falas[3:])
+        player_chan_diz1 = fonte_player_chan.render(fala1,True,falas_player_chan_cor[index])
+        player_chan_diz2 = fonte_player_chan.render(fala2,True,falas_player_chan_cor[index])
+        if not evento_mouse:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+        else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+
+        mouse = pygame.mouse.get_pos()
+
+        if mouse[0] >= 10 and mouse[0] <= 110 and mouse[1] >= 10 and mouse[1] <= 40:
+            evento_mouse = True
+            index = 0
+
+        elif mouse[0] >= 10 and mouse[0] <= 110 and mouse[1] >= 80 and mouse[1] <= 110:
+            evento_mouse = True
+            index = 1
+
+        elif mouse[0] >= 10 and mouse[0] <= 110 and mouse[1] >= 150 and mouse[1] <= 180:
+            evento_mouse = True
+            index = 2
+
+        elif mouse[0] >= 10 and mouse[0] <= 110 and mouse[1] >= 220 and mouse[1] <= 250:
+            evento_mouse = True
+            index = 3
+
+        elif mouse[0] >= 10 and mouse[0] <= 110 and mouse[1] >= 290 and mouse[1] <= 320:
+            evento_mouse = True
+            index = 4
+
+        elif mouse[0] >= 10 and mouse[0] <= 110 and mouse[1] >= 360 and mouse[1] <= 390:
+            evento_mouse = True
+            index = 5
+
+        else:
+            evento_mouse = False
+
+        for evento in pygame.event.get():
+
+            if evento.type == pygame.QUIT:
+                rodando = False
+
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_UP:
+                    if index-1 < 0:
+                        index = 5
+                    else:
+                        index -= 1
+
+                elif evento.key == pygame.K_DOWN:
+                    if index+1 > 5:
+                        index = 0
+                    else:
+                        index += 1
+
+                elif evento.key == pygame.K_RETURN:
+                    rodando = False
+                    OrdemMusicas(tela,clock,fonte,fonte2,estilo[index])
+
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                botao = pygame.mouse.get_pressed(5)
+                if botao[0]:
+                    if evento_mouse:
+                        rodando = False
+                        OrdemMusicas(tela,clock,fonte,fonte2,estilo[index])
+
+        cor_botao = [(0,0,0) for _ in range(6)]
+
+        if index >= 0:
+            cor_botao[index]=(47,79,79)
+
+        tela.fill((54,54,54))
+
+        for i in range(6):
+            pygame.draw.rect(tela,cor_botao[i],(10,10+(70*i),100,30),0)
+
+        for i in range(len(estilos)):
+            tela.blit(estilos[i],(10+(100/2)-(estilos[i].get_width()/2),10+(70*i)+(30/2)-(estilos[i].get_height()/2)))
+        tela.blit(baloes[index][0],baloes[index][1])
+        tela.blit(player_chan_diz1,(285-(70+(player_chan_diz1.get_width()/2)),115))
+        tela.blit(player_chan_diz2,(285-(70+(player_chan_diz2.get_width()/2)),150-player_chan_diz2.get_height()))
+        player_chan.update()
+        tela.blit(player_chan.image,(170,220))
+        pygame.display.flip()
 
 if __name__ == "__main__":
     pygame.init()
@@ -495,5 +623,4 @@ if __name__ == "__main__":
     fonte = pygame.font.SysFont("Lucida Console", 15)
     fonte2 = pygame.font.SysFont("Lucida Console", 60)
 
-    MUSICAS_TOCAR = OrdemMusicas(CAMINHO)
-    Main(tela,clock,fonte,fonte2)
+    TelaEscolherEstilos(tela,clock,fonte,fonte2)
