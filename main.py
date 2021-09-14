@@ -12,7 +12,7 @@ POS = 0
 CAMINHO = "musicas"
 
 
-def Main(tela, clock, fonte):
+def Main(tela, clock, fonte, fonte2):
     global VOLUME
     global TEMPO
 
@@ -24,6 +24,7 @@ def Main(tela, clock, fonte):
     lista_sprites = pygame.sprite.Group()
     dancarino = Dancarino(estilo_musica)
     lista_sprites.add(dancarino)
+    mp3 = fonte2.render("MP3",True,(25, 25, 112))
     X = 60
 
     mouse_event = False
@@ -32,6 +33,11 @@ def Main(tela, clock, fonte):
     pass_mouse = False
     mouse_bar = False
     cor_circulos = [(0,0,0) for _ in range(10)]
+    cor_pause = (0, 0, 0)
+    cor_return = (0, 0, 0)
+    cor_pass = (0, 0, 0)
+    cor_menos = (0, 0, 0)
+    cor_mais = (0, 0, 0)
 
     while rodando:
         if not mouse_event:
@@ -56,12 +62,22 @@ def Main(tela, clock, fonte):
             mouse_event = True
             mouse_bar = True
 
+        elif mouse[0] >= 220 and mouse[0] <= 245 and mouse[1] >= 235 and mouse[1] <= 245:
+            mouse_event = True
+            mouse_volume_menos = True
+
+        elif mouse[0] >= 265 and mouse[0] <= 290 and mouse[1] >= 240-12 and mouse[1] <= 240+12.5:
+            mouse_event = True
+            mouse_volume_mais = True
+
         else:
             mouse_event = False
             pause_mouse = False
             return_mouse = False
             pass_mouse = False
             mouse_bar = False
+            mouse_volume_menos = False
+            mouse_volume_mais = False
 
         if pause_mouse:
             cor_pause = (47,79,79)
@@ -72,10 +88,18 @@ def Main(tela, clock, fonte):
         elif pass_mouse:
             cor_pass = (47,79,79)
 
+        elif mouse_volume_menos:
+            cor_menos = (47,79,79)
+
+        elif mouse_volume_mais:
+            cor_mais = (47, 79, 79)
+
         else:
             cor_pause = (0,0,0)
             cor_return = (0,0,0)
             cor_pass = (0,0,0)
+            cor_menos = (0,0,0)
+            cor_mais = (0,0,0)
 
         if VOLUME < 0.1 and VOLUME > 0:
             cor_circulos[0] = (0,0,250)
@@ -149,7 +173,7 @@ def Main(tela, clock, fonte):
             cor_circulos[8] = (200,0,50)
             cor_circulos[9:] = [(0,0,0) for _ in range(1)]
 
-        elif VOLUME < 1 and VOLUME >= 0.9:
+        elif VOLUME >= 0.9:
             cor_circulos[0] = (0,0,250)
             cor_circulos[1] = (25,0,225)
             cor_circulos[2] = (50,0,200)
@@ -260,6 +284,18 @@ def Main(tela, clock, fonte):
                             pos = (tempo_musica*pos/100)*60
                             TocarMusica(index,pos=pos)
 
+                        elif mouse_volume_mais:
+                            VOLUME += 0.05
+                            pygame.mixer.music.set_volume(VOLUME)
+                            if VOLUME > 1:
+                                VOLUME = 1
+
+                        elif mouse_volume_menos:
+                            VOLUME -= 0.05
+                            pygame.mixer.music.set_volume(VOLUME)
+                            if VOLUME < 0:
+                                VOLUME = 0
+
                 elif evento.type == 900:
                     if (index + 1) < len(MUSICAS_TOCAR):
                         index += 1
@@ -319,7 +355,10 @@ def Main(tela, clock, fonte):
             for i in range(5):
                 pygame.draw.circle(tela,cor_circulos[i],(225+(15*i),200),5)
                 pygame.draw.circle(tela,cor_circulos[i+5],(225+(15*i),215),5)
-
+            tela.blit(mp3,(150-(mp3.get_width()/2),270-(mp3.get_height()/2)))
+            pygame.draw.line(tela,cor_menos,(220,240),(245,240),3)
+            pygame.draw.line(tela,cor_mais,(265,240),(290,240),3)
+            pygame.draw.line(tela,cor_mais,(277.5,240-12),(277.5,240+12.5),3)
 
             pygame.display.flip()
 
@@ -376,6 +415,11 @@ def Main(tela, clock, fonte):
             for i in range(5):
                 pygame.draw.circle(tela,cor_circulos[i],(225+(15*i),200),5)
                 pygame.draw.circle(tela,cor_circulos[i+5],(225+(15*i),215),5)
+            tela.blit(mp3, (150 - (mp3.get_width() / 2), 270 - (mp3.get_height() / 2)))
+            pygame.draw.line(tela,cor_menos,(220,240),(245,240),3)
+            pygame.draw.line(tela,cor_mais,(265,240),(290,240),3)
+            pygame.draw.line(tela,cor_mais,(277.5,240-12),(277.5,240+12.5),3)
+
             pygame.display.flip()
 
 def TocarMusica(index,pos=None):
@@ -416,6 +460,7 @@ if __name__ == "__main__":
     pygame.display.set_caption("Meu MP3")
     clock = pygame.time.Clock()
     fonte = pygame.font.SysFont("Lucida Console", 15)
+    fonte2 = pygame.font.SysFont("Lucida Console", 60)
 
     MUSICAS_TOCAR = OrdemMusicas(CAMINHO)
-    Main(tela,clock,fonte)
+    Main(tela,clock,fonte,fonte2)
