@@ -262,7 +262,7 @@ def Main(tela, clock, fonte, fonte2):
                         if pause_mouse:
                             dancarino.estilo_musica = "pause"
                             cenario.estilo_musica = "pause"
-                            cenario.mudar_cenario = True,
+                            cenario.mudar_cenario = True
                             pause = True
                             pygame.mixer.music.pause()
 
