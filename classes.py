@@ -1,4 +1,6 @@
 import pygame
+import random
+import os
 
 spritesheet = pygame.image.load("dancarino/dança.png")
 class Dancarino(pygame.sprite.Sprite):
@@ -97,3 +99,24 @@ class Dancarino(pygame.sprite.Sprite):
                 self.index = 0
             self.index += self.velocidade
             self.image = self.passos[-1][int(self.index)]
+
+class Cenario(pygame.sprite.Sprite):
+    def __init__(self,estilo_musica):
+        super().__init__()
+        self.estilo_musica = estilo_musica
+        self.mudar_cenario = False
+        for diretorio,subpastas,arquivos in os.walk(f"cenarios/{self.estilo_musica}"):
+            img = pygame.image.load(f"cenarios/{estilo_musica}/{random.choice(arquivos)}")
+            #img tem que ser 260x130
+
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.center = (150,105)
+
+    def update(self):
+        if self.mudar_cenario:
+            for diretorio, subpastas, arquivos in os.walk(f"cenarios/{self.estilo_musica}"):
+                img = pygame.image.load(f"cenarios/{self.estilo_musica}/{random.choice(arquivos)}")
+
+            self.image = img
+            self.mudar_cenario = False

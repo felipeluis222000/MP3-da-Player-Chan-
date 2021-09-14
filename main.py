@@ -1,7 +1,7 @@
 import pygame
 import os
 import random
-from spritesdançarino import *
+from classes import *
 
 LARGURA = 300
 ALTURA = 400
@@ -23,6 +23,8 @@ def Main(tela, clock, fonte, fonte2):
     nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
     lista_sprites = pygame.sprite.Group()
     dancarino = Dancarino(estilo_musica)
+    cenario = Cenario(estilo_musica)
+    lista_sprites.add(cenario)
     lista_sprites.add(dancarino)
     mp3 = fonte2.render("MP3",True,(25, 25, 112))
     X = 60
@@ -207,22 +209,30 @@ def Main(tela, clock, fonte, fonte2):
                             index += 1
                             nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                             dancarino.estilo_musica = estilo_musica
+                            cenario.estilo_musica = estilo_musica
+                            cenario.mudar_cenario = True
 
                         else:
                             index = 0
                             nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                             dancarino.estilo_musica = estilo_musica
+                            cenario.estilo_musica = estilo_musica
+                            cenario.mudar_cenario = True
 
                     elif evento.key == pygame.K_LEFT:
                         if pygame.mixer.music.get_pos()+POS*60000 >= 5000:
                             nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                             dancarino.estilo_musica = estilo_musica
+                            cenario.estilo_musica = estilo_musica
+                            cenario.mudar_cenario = True
 
                         else:
                             if index >= 0:
                                 index -= 1
                                 nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                                 dancarino.estilo_musica = estilo_musica
+                                cenario.estilo_musica = estilo_musica
+                                cenario.mudar_cenario = True
 
                             else:
                                 index = (len(MUSICAS_TOCAR)-1)
@@ -241,6 +251,8 @@ def Main(tela, clock, fonte, fonte2):
 
                     elif evento.key == pygame.K_SPACE:
                         dancarino.estilo_musica = "pause"
+                        cenario.estilo_musica = "pause"
+                        cenario.mudar_cenario = True
                         pause = True
                         pygame.mixer.music.pause()
 
@@ -249,6 +261,8 @@ def Main(tela, clock, fonte, fonte2):
                     if botao[0]:
                         if pause_mouse:
                             dancarino.estilo_musica = "pause"
+                            cenario.estilo_musica = "pause"
+                            cenario.mudar_cenario = True
                             pause = True
                             pygame.mixer.music.pause()
 
@@ -256,12 +270,16 @@ def Main(tela, clock, fonte, fonte2):
                             if pygame.mixer.music.get_pos()+(POS*60000) >= 5000:
                                 nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                                 dancarino.estilo_musica = estilo_musica
+                                cenario.estilo_musica = estilo_musica
+                                cenario.mudar_cenario = True
 
                             else:
                                 if index >= 0:
                                     index -= 1
                                     nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                                     dancarino.estilo_musica = estilo_musica
+                                    cenario.estilo_musica = estilo_musica
+                                    cenario.mudar_cenario = True
 
 
                                 else:
@@ -273,11 +291,15 @@ def Main(tela, clock, fonte, fonte2):
                                 index += 1
                                 nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                                 dancarino.estilo_musica = estilo_musica
+                                cenario.estilo_musica = estilo_musica
+                                cenario.mudar_cenario = True
 
                             else:
                                 index = 0
                                 nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                                 dancarino.estilo_musica = estilo_musica
+                                cenario.estilo_musica = estilo_musica
+                                cenario.mudar_cenario = True
 
                         elif mouse_bar:
                             pos = ((mouse[0]-50)*100/200)
@@ -301,11 +323,15 @@ def Main(tela, clock, fonte, fonte2):
                         index += 1
                         nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                         dancarino.estilo_musica = estilo_musica
+                        cenario.estilo_musica = estilo_musica
+                        cenario.mudar_cenario = True
 
                     else:
                         index = 0
                         nome_musica,estilo_musica,tempo_musica = TocarMusica(index)
                         dancarino.estilo_musica = estilo_musica
+                        cenario.estilo_musica = estilo_musica
+                        cenario.mudar_cenario = True
 
             if tecla[pygame.K_UP]:
                 VOLUME += 0.005
@@ -374,6 +400,8 @@ def Main(tela, clock, fonte, fonte2):
 
                     if evento.key == pygame.K_SPACE:
                         dancarino.estilo_musica = estilo_musica
+                        cenario.estilo_musica = estilo_musica
+                        cenario.mudar_cenario = True
                         pause = False
                         pygame.mixer.music.unpause()
 
@@ -382,6 +410,8 @@ def Main(tela, clock, fonte, fonte2):
                     if botao[0]:
                         if pause_mouse:
                             dancarino.estilo_musica = estilo_musica
+                            cenario.estilo_musica = estilo_musica
+                            cenario.mudar_cenario = True
                             pause = False
                             pygame.mixer.music.unpause()
 
@@ -419,6 +449,7 @@ def Main(tela, clock, fonte, fonte2):
             pygame.draw.line(tela,cor_menos,(220,240),(245,240),3)
             pygame.draw.line(tela,cor_mais,(265,240),(290,240),3)
             pygame.draw.line(tela,cor_mais,(277.5,240-12),(277.5,240+12.5),3)
+
 
             pygame.display.flip()
 
