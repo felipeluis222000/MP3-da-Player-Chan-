@@ -497,7 +497,7 @@ def TelaEscolherEstilos(tela,clock,fonte,fonte2):
     index = 0
     falas_player_chan = ["Vai ser uma loucura! 0__0","Vamos dar uma animada :)","Hoje estou meio devagar ~_~",
                          "VAMOS FAZER BARULO! \'0\'","eheheh, assim eh o amor! S2","Hora de ficar pra baixo ;-;"]
-    falas_player_chan_cor = [(255,255,255) for _ in range(6)]
+    falas_player_chan_cor = [(0,0,0),(244,158,18),(54,103,53),(252,15,192),(220,20,60),(135,206,235)]
     fonte_player_chan = pygame.font.Font("fontes/Musicals.ttf",12)
     todas = fonte.render("todas",True,(255,255,255))
     animadas = fonte.render("animadas",True,(255,255,255))
